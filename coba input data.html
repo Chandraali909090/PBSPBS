@@ -144,7 +144,7 @@ estAPEInput.addEventListener("input", function (e) {
     const estAPE = formData.get("estAPE").replace(/,/g, "");
     formData.set("estAPE", estAPE);
 
-    fetch("https://script.google.com/macros/s/AKfycbxGioEJfm-KxW	DZrtIxULG5hQxSNoQt-d7ckD_52JixTWbrAlb_O3EfgyPJ36V_2j8-/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbxGioEJfm-KxWDZrtIxULG5hQxSNoQt-d7ckD_52JixTWbrAlb_O3EfgyPJ36V_2j8-/exec", {
       method: "POST",
       body: formData
     })
