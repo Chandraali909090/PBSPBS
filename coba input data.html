@@ -91,7 +91,7 @@
   <option value="DAVESTERA">DAVESTERA</option>
 </select>
 
-<input type="number" name="estAPE" id="estAPE" placeholder="Estimasi APE" required>
+<input type="text" name="estAPE" id="estAPE" placeholder="Estimated APE" required>
 
 <select name="statusNasabah" required>
   <option value="" disabled selected>Status Nasabah</option>
@@ -104,38 +104,56 @@
 
 <button type="submit">Kirim</button>
 
-      <button type="submit">Kirim</button>
     </form>
 
     <a href="new or existing.html">⬅️ Kembali ke Menu Utama</a>
   </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("namaPBS").value = localStorage.getItem("namaPBS") || "";
+    document.getElementById("kodePBS").value = localStorage.getItem("kodePBS") || "";
+  });
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
+  // Format angka pakai koma sebagai pemisah ribuan
+  // Format angka pakai koma sebagai pemisah ribuan
+function formatRibuan(angka) {
+  return angka.replace(/\D/g, "")  // hanya angka
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // pakai koma
+}
+
+const estAPEInput = document.getElementById("estAPE");
+
+estAPEInput.addEventListener("input", function (e) {
+  const cursorPos = this.selectionStart;
+  const valueBefore = this.value;
+
+  const angkaBersih = valueBefore.replace(/,/g, "");
+  this.value = formatRibuan(angkaBersih);
+
+  const diff = this.value.length - valueBefore.length;
+  this.selectionEnd = cursorPos + diff;
+});
+
+
+  document.getElementById("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    // Hapus koma ribuan sebelum dikirim
+    const estAPE = formData.get("estAPE").replace(/,/g, "");
+    formData.set("estAPE", estAPE);
+
+    fetch("https://script.google.com/macros/s/AKfycbxGioEJfm-KxW	DZrtIxULG5hQxSNoQt-d7ckD_52JixTWbrAlb_O3EfgyPJ36V_2j8-/exec", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+      alert(data);
+      form.reset();
       document.getElementById("namaPBS").value = localStorage.getItem("namaPBS") || "";
-      document.getElementById("kodePBS").value = localStorage.getItem("kodePBS") || "";
-      document.getElementById("estAPE").value = "0";
-    });
-
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
-
-      fetch("https://script.google.com/macros/s/AKfycbxGioEJfm-KxWDZrtIxULG5hQxSNoQt-d7ckD_52JixTWbrAlb_O3EfgyPJ36V_2j8-/exec", {
-        method: "POST",
-        body: formData
-      })
-      .then(response => response.text())
-      .then(data => {
-        alert(data);
-        form.reset();
-        document.getElementById("namaPBS").value = localStorage.getItem("namaPBS") || "";
-        document.getElementById("kodePBS").value = localStorage.getItem("kodePBS") || "";
-        document.getElementById("estAPE").value = "0";
-      })
-      .catch(error => alert("Gagal: " + error));
-    });
+      document.getElementBy
   </script>
 </body>
 </html>
