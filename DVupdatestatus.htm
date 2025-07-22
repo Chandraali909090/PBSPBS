@@ -186,49 +186,68 @@
     select.addEventListener("change", () => {
       let selectedValue = select.value;
 
-      if (selectedValue === "FINALISASI") {
-        const pilihan = document.createElement("select");
-        pilihan.innerHTML = `
-          <option value="" disabled selected>Pilih Finalisasi</option>
-          <option value="CLOSING">CLOSING</option>
-          <option value="LOSE">LOSE</option>
-        `;
-        pilihan.style.marginTop = "10px";
+   if (selectedValue === "FINALISASI") {
+  const pilihan = document.createElement("select");
+  pilihan.innerHTML = `
+    <option value="" disabled selected>Pilih Finalisasi</option>
+    <option value="CLOSING">CLOSING</option>
+    <option value="LOSE">LOSE</option>
+  `;
+  pilihan.style.marginTop = "10px";
 
-        const container = document.createElement("div");
-        const label = document.createElement("label");
-        label.textContent = "Status FINALISASI memerlukan konfirmasi. Pilih status akhir:";
-        container.appendChild(label);
-        container.appendChild(document.createElement("br"));
-        container.appendChild(pilihan);
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "Batal";
+  cancelBtn.style.marginTop = "15px";
+  cancelBtn.style.marginLeft = "10px";
+  cancelBtn.style.padding = "6px 12px";
+  cancelBtn.style.border = "none";
+  cancelBtn.style.backgroundColor = "#ccc";
+  cancelBtn.style.cursor = "pointer";
+  cancelBtn.style.borderRadius = "4px";
 
-        const modal = document.createElement("div");
-        modal.style.position = "fixed";
-        modal.style.top = "50%";
-        modal.style.left = "50%";
-        modal.style.transform = "translate(-50%, -50%)";
-        modal.style.background = "#fff";
-        modal.style.border = "1px solid #ccc";
-        modal.style.padding = "20px";
-        modal.style.zIndex = "9999";
-        modal.appendChild(container);
+  const container = document.createElement("div");
+  const label = document.createElement("label");
+  label.textContent = "Status FINALISASI memerlukan konfirmasi. Pilih status akhir:";
+  container.appendChild(label);
+  container.appendChild(document.createElement("br"));
+  container.appendChild(pilihan);
+  container.appendChild(cancelBtn);
 
-        document.body.appendChild(modal);
+  const modal = document.createElement("div");
+  modal.style.position = "fixed";
+  modal.style.top = "50%";
+  modal.style.left = "50%";
+  modal.style.transform = "translate(-50%, -50%)";
+  modal.style.background = "#fff";
+  modal.style.border = "1px solid #ccc";
+  modal.style.padding = "20px";
+  modal.style.zIndex = "9999";
+  modal.style.borderRadius = "8px";
+  modal.appendChild(container);
 
-        pilihan.addEventListener("change", () => {
-          const finalStatus = pilihan.value;
-          const confirmChange = confirm(`Ubah status menjadi "${finalStatus}"?`);
-          if (confirmChange) {
-            updateStatus(namaPBS, kodePBS, row[4], finalStatus);
-          } else {
-            select.value = currentStatus;
-          }
-          document.body.removeChild(modal);
-        });
+  document.body.appendChild(modal);
 
-        select.value = currentStatus;
-        return;
-      }
+  // ⛔ Tombol batal (close)
+  cancelBtn.addEventListener("click", () => {
+    select.value = currentStatus; // Kembalikan dropdown ke status semula
+    document.body.removeChild(modal); // Tutup popup
+  });
+
+  pilihan.addEventListener("change", () => {
+    const finalStatus = pilihan.value;
+    const confirmChange = confirm(`Ubah status menjadi "${finalStatus}"?`);
+    if (confirmChange) {
+      updateStatus(namaPBS, kodePBS, row[4], finalStatus);
+    } else {
+      select.value = currentStatus;
+    }
+    document.body.removeChild(modal);
+  });
+
+  select.value = currentStatus; // Kembalikan ke semula kalau tidak dipilih
+  return;
+}
+
 
       const confirmChange = confirm(`Ubah status "${row[4]}" menjadi "${selectedValue}"?`);
       if (confirmChange) {
